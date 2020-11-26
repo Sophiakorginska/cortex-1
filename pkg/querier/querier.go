@@ -23,6 +23,7 @@ import (
 	"github.com/cortexproject/cortex/pkg/querier/iterators"
 	"github.com/cortexproject/cortex/pkg/querier/lazyquery"
 	"github.com/cortexproject/cortex/pkg/querier/series"
+	"github.com/cortexproject/cortex/pkg/querier/stats"
 	"github.com/cortexproject/cortex/pkg/util"
 	"github.com/cortexproject/cortex/pkg/util/flagext"
 	"github.com/cortexproject/cortex/pkg/util/spanlogger"
@@ -254,7 +255,8 @@ func NewQueryable(distributor QueryableWithFilter, stores []QueryableWithFilter,
 			q.queriers = append(q.queriers, cqr)
 		}
 
-		return q, nil
+		// TODO track stats only if enabled
+		return stats.NewQuerierTracker(q, stats.FromContext(ctx)), nil
 	})
 }
 
